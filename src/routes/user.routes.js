@@ -1,6 +1,16 @@
 import { Router } from "express";
 import { upload } from "../middleware/multer.middleware.js";
-import { registerUser,login, logout,refreshTokens,changePassword,getCurrentUser} from "../controllers/user.controllers.js";
+import {
+	registerUser,
+	login,
+	logout,
+	refreshTokens,
+	changePassword,
+	getCurrentUser,
+	updateAccountDetails,
+	updateAvatar,
+	updateCoverImage,
+} from "../controllers/user.controllers.js";
 import { verifyJWT } from "../middleware/auth.middleware.js";
 
 const router = Router();
@@ -18,11 +28,13 @@ router.route("/register").post(
 	]),
 	registerUser,
 );
-router.route("/login").post(login)
-router.route("/logout").post(verifyJWT,logout)
-router.route("/refreshToken").post(refreshTokens)
-router.route("/changePassword").post(verifyJWT,changePassword)
-router.route("/getcurrentuser").get(verifyJWT,getCurrentUser)
-
+router.route("/login").post(login);
+router.route("/logout").post(verifyJWT, logout);
+router.route("/refreshToken").post(refreshTokens);
+router.route("/changePassword").post(verifyJWT, changePassword);
+router.route("/getcurrentuser").get(verifyJWT, getCurrentUser);
+router.route("/updateaccountdetails").patch(verifyJWT, updateAccountDetails);
+router.route("/updateavatar").patch(verifyJWT, upload.single("avatar"), updateAvatar);
+router.route("/updatecoverimage").patch(verifyJWT, upload.single("coverImage"), updateCoverImage);
 
 export default router;
