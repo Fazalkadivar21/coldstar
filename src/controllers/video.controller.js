@@ -141,17 +141,65 @@ const getVideoById = asyncHandler(async (req, res) => {
 
 const updateVideo = asyncHandler(async (req, res) => {
 	const { videoId } = req.params;
+	const { title, description, thumbnail } = req.body;
+	const thumbnailLocalPath = req.file?.path;
+
 	//TODO: update video details like title, description, thumbnail
 
+	const dataToUpdate = {};
+
+	if (title) dataToUpdate.title = title;
+	if (description) dataToUpdate.description = description;
+	if (thumbnailLocalPath) {
+		const { url } = await uploadOnCloudinary(thumbnailLocalPath);
+		if (!url) return new ApiError(400, "Thumbnail required");
+		dataToUpdate.thumbnail = url;
+	}
+
+	const updatedVideo = await Video.findByIdAndUpdate(
+		videoId,
+		{
+			$set: {
+				...dataToUpdate,
+			},
+		},
+		{ new: true },
+	);
+
+	if (!updatedVideo) throw new ApiError(404, "video not found");
+
+	return res
+		.status(200)
+		.json(new ApiResponse(200, updatedVideo, "Video updated successfully"));
 });
 
 const deleteVideo = asyncHandler(async (req, res) => {
 	const { videoId } = req.params;
 	//TODO: delete video
+
+	const video = await Video.findByIdAndDelete(video);
+
+	if (!video) throw new ApiError(404, "video not found");
+
+	return res
+		.status(200)
+		.json(new ApiResponse(200, {}, "Video deleted successfully"));
 });
 
 const togglePublishStatus = asyncHandler(async (req, res) => {
 	const { videoId } = req.params;
+
+	const video = await Video.findByIdAndUpdate(
+		video,
+		{ $set: { isPublished: !isPublished } },
+		{ new: true },
+	);
+
+	if (!video) throw new ApiError(404, "video not found");
+
+	return res
+		.status(200)
+		.json(new ApiResponse(200, video, "Video deleted successfully"));
 });
 
 export {
