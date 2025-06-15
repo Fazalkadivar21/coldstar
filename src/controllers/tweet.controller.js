@@ -34,7 +34,7 @@ const getUserTweets = asyncHandler(async (req, res) => {
 
 	const pipeline = [
 		{
-			$match: { owner: new mongoose.Types.ObjectId(userId) },
+			$match: { owner: userId },
 		},
 		{
 			$sort: {
@@ -49,7 +49,7 @@ const getUserTweets = asyncHandler(async (req, res) => {
 	};
 
 	const result = await Tweet.aggregatePaginate(
-		Tweet.aggregate(pipeline),
+		await Tweet.aggregate(pipeline),
 		options,
 	);
 
