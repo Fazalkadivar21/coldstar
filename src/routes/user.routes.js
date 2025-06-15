@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { upload } from "../middleware/multer.middleware.js";
+import { upload } from "../middlewares/multer.middleware.js";
 import {
 	registerUser,
 	login,
@@ -13,7 +13,7 @@ import {
 	getUserChannelProfile,
 	getWatchHistory,
 } from "../controllers/user.controllers.js";
-import { verifyJWT } from "../middleware/auth.middleware.js";
+import { verifyJWT } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
